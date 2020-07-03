@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.Nullable;
 import androidx.arch.core.util.Function;
 
 import org.webrtc.IceCandidate;
@@ -31,7 +32,7 @@ import viz.commonlib.openvidu.observers.CustomPeerConnectionObserver;
 import viz.commonlib.openvidu.observers.CustomSdpObserver;
 import viz.commonlib.openvidu.websocket.CustomWebSocket;
 
-public class Session{
+public class Session {
 
     private LocalParticipant localParticipant;
     private Map<String, RemoteParticipant> remoteParticipants = new HashMap<>();
@@ -41,11 +42,19 @@ public class Session{
     private PeerConnectionFactory peerConnectionFactory;
     private CustomWebSocket websocket;
     private Context context;
-    private Function<RemoteMediaStreamBean,Void> setRemoteMediaStream;
+    private Function<RemoteMediaStreamBean, Void> setRemoteMediaStream;
+    private String stunServer = "stun:101.132.117.103:3478";
 
-    public Session(String id, String token, ViewGroup views_container, Context context, Function<RemoteMediaStreamBean,Void> setRemoteMediaStream) {
+    public Session(String id, String token, ViewGroup views_container, Context context, Function<RemoteMediaStreamBean, Void> setRemoteMediaStream) {
+        new Session(id, token, null, views_container, context, setRemoteMediaStream);
+    }
+
+    public Session(String id, String token, @Nullable String stunServer, ViewGroup views_container, Context context, Function<RemoteMediaStreamBean, Void> setRemoteMediaStream) {
         this.id = id;
         this.token = token;
+        if (stunServer != null && !stunServer.isEmpty()) {
+            this.stunServer = stunServer;
+        }
         this.views_container = views_container;
         this.context = context;
         this.setRemoteMediaStream = setRemoteMediaStream;
@@ -74,7 +83,7 @@ public class Session{
 
     public PeerConnection createLocalPeerConnection() {
         final List<PeerConnection.IceServer> iceServers = new ArrayList<>();
-        PeerConnection.IceServer iceServer = PeerConnection.IceServer.builder("stun:101.132.117.103:3478").createIceServer();
+        PeerConnection.IceServer iceServer = PeerConnection.IceServer.builder(stunServer).createIceServer();
         iceServers.add(iceServer);
 
         PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
@@ -121,8 +130,8 @@ public class Session{
             @Override
             public void onAddStream(MediaStream mediaStream) {
                 super.onAddStream(mediaStream);
-                if(setRemoteMediaStream !=null) {
-                    setRemoteMediaStream.apply(new RemoteMediaStreamBean(mediaStream,remoteParticipants.get(connectionId)));
+                if (setRemoteMediaStream != null) {
+                    setRemoteMediaStream.apply(new RemoteMediaStreamBean(mediaStream, remoteParticipants.get(connectionId)));
                 }
             }
 
