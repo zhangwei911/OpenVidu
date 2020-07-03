@@ -40,7 +40,7 @@ dependencies {
     api "org.webrtc:google-webrtc:1.0.30039"
 }
 
-//packageTask()
+packageTask()
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
