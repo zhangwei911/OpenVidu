@@ -46,7 +46,7 @@ public class Session {
     private String stunServer = "stun:101.132.117.103:3478";
 
     public Session(String id, String token, ViewGroup views_container, Context context, Function<RemoteMediaStreamBean, Void> setRemoteMediaStream) {
-        new Session(id, token, null, views_container, context, setRemoteMediaStream);
+        this(id, token, null, views_container, context, setRemoteMediaStream);
     }
 
     public Session(String id, String token, @Nullable String stunServer, ViewGroup views_container, Context context, Function<RemoteMediaStreamBean, Void> setRemoteMediaStream) {
