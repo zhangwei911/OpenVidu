@@ -110,6 +110,8 @@ public class CustomWebSocket extends AsyncTask<Void, Void, Void> implements WebS
         void callLeaveSession();
 
         void onMessage(WebSocketMessage message);
+
+        void participantLeft(String connectionId);
     }
 
     public void setCustomWebSocketListener(CustomWebSocketListener customWebSocketListener) {
@@ -377,6 +379,9 @@ public class CustomWebSocket extends AsyncTask<Void, Void, Void> implements WebS
     }
 
     private void participantLeftEvent(JSONObject params) throws JSONException {
+        if (customWebSocketListener != null) {
+            customWebSocketListener.participantLeft(params.getString("connectionId"));
+        }
         final RemoteParticipant remoteParticipant = this.session.removeRemoteParticipant(params.getString("connectionId"));
         remoteParticipant.dispose();
         Handler mainHandler = new Handler(context.getMainLooper());

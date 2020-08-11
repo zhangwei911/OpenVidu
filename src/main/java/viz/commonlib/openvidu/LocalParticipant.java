@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -102,23 +101,8 @@ public class LocalParticipant extends Participant {
                 set.clone(views_container);
                 int rowId = localViewId;
                 rowView.setId(rowId);
-                views_container.addView(rowView, 0);
-                DisplayMetrics dm = activity.getResources().getDisplayMetrics();
-                set.constrainWidth(rowId, dm.widthPixels);
-                set.constrainHeight(rowId, dm.heightPixels);
-                set.connect(
-                        rowId, ConstraintSet.TOP, views_container.getId(), ConstraintSet.TOP
-                );
-                set.connect(
-                        rowId, ConstraintSet.END, views_container.getId(), ConstraintSet.END
-                );
-                set.connect(
-                        rowId, ConstraintSet.START, views_container.getId(), ConstraintSet.START
-                );
-                set.connect(
-                        rowId, ConstraintSet.BOTTOM, views_container.getId(), ConstraintSet.BOTTOM
-                );
-                set.applyTo(views_container);
+                views_container.addView(rowView, 1);
+                toggleLayout(true, rowId, activity, views_container);
                 SurfaceViewRenderer videoView = (SurfaceViewRenderer) ((ViewGroup) rowView).getChildAt(0);
                 this.localVideoView = videoView;
                 EglBase rootEglBase = EglBase.create();
